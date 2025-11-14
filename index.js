@@ -11,7 +11,11 @@ const server = http.createServer((req, res) => {
   // --------------------------
   if (req.url === '/login' && req.method === 'POST') {
     let body = '';
-    req.on('data', chunk => body += chunk);
+
+    req.on('data', chunk => {
+      body += chunk;
+    });
+
     req.on('end', () => {
       try {
         const { username, password } = JSON.parse(body || '{}');
@@ -26,7 +30,8 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ ok: false, error: 'Bad request' }));
       }
     });
-    return;
+
+    return; // Important! Stop here so it does not continue to /about or default
   }
 
   // --------------------------
